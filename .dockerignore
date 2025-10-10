@@ -1,0 +1,73 @@
+# Dependencies
+node_modules
+frontend/node_modules
+npm-debug.log*
+package-lock.json
+
+# Testing
+coverage
+.nyc_output
+
+# Production
+build
+dist
+frontend/dist
+frontend/build
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Logs
+logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Documentation
+docs
+*.md
+!README.md
+
+# CI/CD
+.github
+
+# Generated content
+generated
+uploads
+temp
+*.mp4
+*.mp3
+*.wav
+*.png
+*.jpg
+*.jpeg
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+dump.rdb
+
+# Tests
+tests
+*.test.js
+jest.config.js
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore

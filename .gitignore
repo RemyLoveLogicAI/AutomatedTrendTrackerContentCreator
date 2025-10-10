@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+frontend/build/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Generated content
+uploads/
+generated/
+*.mp4
+*.mp3
+*.wav
+
+# Database
+*.sqlite
+*.db
+
+# Redis dump
+dump.rdb
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Docker
+docker-compose.override.yml
+
+# AWS
+.aws/

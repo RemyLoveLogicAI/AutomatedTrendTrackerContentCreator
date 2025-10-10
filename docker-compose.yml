@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Main application
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - POSTGRES_HOST=postgres
+      - REDIS_HOST=redis
+      - MONGODB_URI=mongodb://mongodb:27017/trend_tracker
+    volumes:
+      - ./logs:/usr/src/app/logs
+      - ./uploads:/usr/src/app/uploads
+      - ./generated:/usr/src/app/generated
+    depends_on:
+      - postgres
+      - redis
+      - mongodb
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=trend_tracker
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # Redis cache
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # MongoDB (alternative database)
+  mongodb:
+    image: mongo:6
+    environment:
+      - MONGO_INITDB_DATABASE=trend_tracker
+    volumes:
+      - mongodb-data:/data/db
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
+  redis-data:
+  mongodb-data:
+
+networks:
+  app-network:
+    driver: bridge

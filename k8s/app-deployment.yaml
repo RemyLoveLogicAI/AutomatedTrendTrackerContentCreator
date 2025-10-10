@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trend-tracker-app
+  labels:
+    app: trend-tracker
+    component: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: trend-tracker
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: trend-tracker
+        component: backend
+    spec:
+      containers:
+      - name: app
+        image: trend-tracker:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "3000"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: trend-tracker-secrets
+              key: database-url
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: trend-tracker-secrets
+              key: mongodb-uri
+        - name: REDIS_HOST
+          value: "redis-service"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: trend-tracker-secrets
+              key: openai-api-key
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        volumeMounts:
+        - name: generated-content
+          mountPath: /usr/src/app/generated
+      volumes:
+      - name: generated-content
+        persistentVolumeClaim:
+          claimName: generated-content-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trend-tracker-service
+spec:
+  selector:
+    app: trend-tracker
+    component: backend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: LoadBalancer

@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  # Main application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: trend-tracker-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/trendtracker
+      - MONGODB_URI=mongodb://mongo:27017/trendtracker
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - mongo
+      - redis
+    volumes:
+      - ./generated:/usr/src/app/generated
+      - ./logs:/usr/src/app/logs
+    networks:
+      - trend-tracker-network
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    container_name: trend-tracker-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=trendtracker
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - trend-tracker-network
+
+  # MongoDB database
+  mongo:
+    image: mongo:7
+    container_name: trend-tracker-mongo
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_DATABASE=trendtracker
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - trend-tracker-network
+
+  # Redis cache and queue
+  redis:
+    image: redis:7-alpine
+    container_name: trend-tracker-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - trend-tracker-network
+    command: redis-server --appendonly yes
+
+  # Frontend (React dashboard)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: trend-tracker-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    networks:
+      - trend-tracker-network
+
+volumes:
+  postgres-data:
+  mongo-data:
+  redis-data:
+
+networks:
+  trend-tracker-network:
+    driver: bridge

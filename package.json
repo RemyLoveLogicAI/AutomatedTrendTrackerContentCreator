@@ -36,7 +36,7 @@
     "@google-cloud/text-to-speech": "^4.2.2",
     "@google-cloud/translate": "^7.2.2",
     "snoowrap": "^1.23.0",
-    "twitter-api-v2": "^1.15.0",
+    "twitter-api-v2": "^1.28.0",
     "google-trends-api": "^4.9.2",
     "googleapis": "^122.0.0",
     "@huggingface/inference": "^2.6.1",

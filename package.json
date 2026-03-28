@@ -43,7 +43,7 @@
     "aws-sdk": "^2.1419.0",
     "multer": "^1.4.5-lts.1",
     "fluent-ffmpeg": "^2.1.2",
-    "sharp": "^0.32.1",
+    "sharp": "^0.34.5",
     "helmet": "^7.0.0",
     "express-rate-limit": "^6.8.1",
     "joi": "^17.9.2",

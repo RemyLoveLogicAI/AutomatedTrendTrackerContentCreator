@@ -43,7 +43,7 @@
     "aws-sdk": "^2.1419.0",
     "multer": "^1.4.5-lts.1",
     "fluent-ffmpeg": "^2.1.2",
-    "sharp": "^0.32.1",
+    "sharp": "^0.35.4",
     "helmet": "^7.0.0",
     "express-rate-limit": "^6.8.1",
     "joi": "^17.9.2",
@@ -60,7 +60,11 @@
     "supertest": "^6.3.3"
   },
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=18.17.0",
+    "npm": ">=9.0.0"
+  },
+  "overrides": {
+    "browserslist": "4.28.7",
+    "baseline-browser-mapping": "2.11.0"
   }
 }
